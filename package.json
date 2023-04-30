@@ -20,10 +20,19 @@
       }
     ],
     "views": {
-      "explorer": [
+      "quickaccess-view": [
         {
           "id": "quickaccessView",
-          "name": "Quickaccess View"
+          "name": "Quickaccess"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "quickaccess-view",
+          "title": "Quickaccess",
+          "icon": "$(go-to-file)"
         }
       ]
     },
