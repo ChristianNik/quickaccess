@@ -12,12 +12,27 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [],
+    "commands": [
+      {
+        "command": "quickaccess.deleteItem",
+        "title": "Delete",
+        "icon": "$(trash)"
+      }
+    ],
     "views": {
       "explorer": [
         {
           "id": "quickaccessView",
           "name": "Quickaccess View"
+        }
+      ]
+    },
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "quickaccess.deleteItem",
+          "when": "view == quickaccessView",
+          "group": "inline"
         }
       ]
     }

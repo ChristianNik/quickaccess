@@ -14,6 +14,10 @@ export class QuickaccessView {
     vscode.commands.registerCommand("quickaccess.openFile", (resource: vscode.Uri) =>
       this.openResource(resource)
     );
+
+    vscode.commands.registerCommand("quickaccess.deleteItem", (item: Item) => {
+      provider.deleteItem(item);
+    });
   }
 
   private openResource(resource: vscode.Uri): void {
@@ -62,7 +66,7 @@ class QuickaccessProvider
       path: filePath,
     });
 
-    this._onDidChangeTreeData.fire();
+    this.refresh();
   }
 
   resolveTreeItem?(
@@ -99,6 +103,15 @@ class QuickaccessProvider
       const basename = path.basename(resource.path);
       return new Item(basename, resource);
     });
+  }
+
+  refresh() {
+    this._onDidChangeTreeData.fire();
+  }
+
+  deleteItem(item: Item) {
+    this.items = this.items.filter((_item) => _item.path !== item.resource.path);
+    this.refresh();
   }
 }
 
