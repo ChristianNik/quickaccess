@@ -1,10 +1,10 @@
-# quickaccess README
+# QuickAccess extention
 
 This extension allows you to store files in a visual clipboard, making it easy to access them quickly and efficiently.
 
 ## Features
 
-![2023-04-30 18-47-02](https://user-images.githubusercontent.com/40700226/235365669-e431c44e-9d22-400b-9e01-e1df002b69c6.gif)
+![QuickAccess](./resources/quickaccess.gif)
 
 ## Requirements
 
