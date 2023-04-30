@@ -12,6 +12,7 @@
   "publisher": "chnikel",
   "activationEvents": [],
   "main": "./out/extension.js",
+  "icon": "./resources/logo.png",
   "contributes": {
     "commands": [
       {
