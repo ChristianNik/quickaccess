@@ -12,9 +12,15 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-    
-    ]
+    "commands": [],
+    "views": {
+      "explorer": [
+        {
+          "id": "quickaccessView",
+          "name": "Quickaccess View"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
