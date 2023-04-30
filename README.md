@@ -25,10 +25,4 @@ This extension allows you to store files in a visual clipboard, making it easy t
 
 > None
 
-## Release Notes
-
-### 0.0.1
-
-🚀 Initial release
-
 **Enjoy!**
