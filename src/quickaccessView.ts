@@ -88,7 +88,7 @@ class QuickaccessProvider
       command: {
         command: "quickaccess.openFile",
         arguments: [element.resource],
-        title: "Open FTP Resource",
+        title: "Open File",
       },
     };
   }
