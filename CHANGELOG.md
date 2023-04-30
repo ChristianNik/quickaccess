@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- Extention icon
+- Persistent storage
+
 ## [0.0.1] - 2023-04-30
 
 - Initial release
