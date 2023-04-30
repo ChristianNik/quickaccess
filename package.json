@@ -13,10 +13,7 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "quickaccess.helloWorld",
-        "title": "Hello World"
-      }
+    
     ]
   },
   "scripts": {
