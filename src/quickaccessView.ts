@@ -4,7 +4,7 @@ import { Item } from "./item";
 
 export class QuickaccessView {
   constructor(context: vscode.ExtensionContext) {
-    const provider = new QuickaccessProvider();
+    const provider = new QuickaccessProvider(context);
 
     const view = vscode.window.createTreeView("quickaccessView", {
       treeDataProvider: provider,

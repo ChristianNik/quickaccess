@@ -1,23 +1,37 @@
 import * as vscode from "vscode";
-import * as path from "path";
 import { Item } from "./item";
 
 export class QuickaccessProvider
   implements vscode.TreeDataProvider<Item>, vscode.TreeDragAndDropController<Item>
 {
-  constructor() {}
+  items: Key[] = this.context.workspaceState.get<Key[]>("items") || [];
 
-  items: Key[] = [
-    {
-      path: "/home/christian/Dokumente/nuxt-vuetify-testing/.gitignore",
-    },
-  ];
+  constructor(private context: vscode.ExtensionContext) {
+    this.fixTreeViewNotDropableWhenViewIsEmpty();
+  }
+
+  fixTreeViewNotDropableWhenViewIsEmpty() {
+    if (this.items.length > 0) {
+      return;
+    }
+
+    this.items = [
+      {
+        path: "Loading...",
+      },
+    ];
+
+    setTimeout(() => {
+      this.deleteItemByPath("Loading...");
+    }, 100);
+  }
+
   dropMimeTypes: readonly string[] = ["text/uri-list"];
   dragMimeTypes: readonly string[] = [];
 
   private _onDidChangeTreeData: vscode.EventEmitter<Item[] | undefined | null | void> =
     new vscode.EventEmitter<Item[] | undefined | null | void>();
-  // We want to use an array as the event type, but the API for this is currently being finalized. Until it's finalized, use any.
+
   public onDidChangeTreeData: vscode.Event<any> = this._onDidChangeTreeData.event;
 
   handleDrop?(
@@ -42,7 +56,6 @@ export class QuickaccessProvider
     this.items.push({
       path: filePath,
     });
-
     this.refresh();
   }
 
@@ -71,23 +84,20 @@ export class QuickaccessProvider
   }
 
   getChildren(element?: Item): Item[] {
-    return this._getChildren();
-  }
-
-  _getChildren(): Item[] {
-    return this.items.map((item) => {
-      const resource = vscode.Uri.file(item.path);
-      const basename = path.basename(resource.path);
-      return new Item(basename, resource);
-    });
+    return this.items.map((item) => Item.fromPath(item.path));
   }
 
   refresh() {
+    this.context.workspaceState.update("items", this.items);
     this._onDidChangeTreeData.fire();
   }
 
   deleteItem(item: Item) {
-    this.items = this.items.filter((_item) => _item.path !== item.resource.path);
+    this.deleteItemByPath(item.resource.path);
+  }
+
+  deleteItemByPath(path: string) {
+    this.items = this.items.filter((_item) => _item.path !== path);
     this.refresh();
   }
 }
