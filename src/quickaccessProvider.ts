@@ -76,7 +76,7 @@ export class QuickaccessProvider
       description: element.description,
       collapsibleState: vscode.TreeItemCollapsibleState.None,
       command: {
-        command: "quickaccess.openFile",
+        command: "vscode.open",
         arguments: [element.resource],
         title: "Open File",
       },
