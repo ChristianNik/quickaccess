@@ -12,16 +12,8 @@ export class QuickaccessView {
     });
     context.subscriptions.push(view);
 
-    vscode.commands.registerCommand("quickaccess.openFile", (resource: vscode.Uri) =>
-      this.openResource(resource)
-    );
-
     vscode.commands.registerCommand("quickaccess.deleteItem", (item: Item) => {
       provider.deleteItem(item);
     });
-  }
-
-  private openResource(resource: vscode.Uri): void {
-    vscode.window.showTextDocument(resource);
   }
 }
