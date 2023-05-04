@@ -1,10 +1,19 @@
 import * as vscode from "vscode";
 import { Item } from "./item";
+import { TreeItemCollapsibleState } from "vscode";
+import * as fs from "fs";
 
 export class QuickaccessProvider
-  implements vscode.TreeDataProvider<Item>, vscode.TreeDragAndDropController<Item>
+  implements
+    vscode.TreeDataProvider<vscode.TreeItem>,
+    vscode.TreeDragAndDropController<vscode.TreeItem>
 {
-  items: Key[] = this.context.workspaceState.get<Key[]>("items") || [];
+  tree: any = {
+    "#4963": {
+      "/home/christian/Dokumente/quickaccess/.gitignore": {},
+    },
+    "/home/christian/Dokumente/quickaccess/package.json": {},
+  };
 
   constructor(private context: vscode.ExtensionContext) {
     this.fixTreeViewNotDropableWhenViewIsEmpty();
@@ -16,9 +25,9 @@ export class QuickaccessProvider
     }
 
     this.items = [
-      {
-        path: "Loading...",
-      },
+      // {
+      //   path: "Loading...",
+      // },
     ];
 
     setTimeout(() => {
@@ -26,38 +35,70 @@ export class QuickaccessProvider
     }, 100);
   }
 
-  getTreeItem(element: Item): Item {
-    return {
-      resourceUri: element.resource,
-      label: element.label,
-      resource: element.resource,
-      tooltip: element.tooltip,
-      description: element.description,
-      collapsibleState: vscode.TreeItemCollapsibleState.None,
-      command: {
-        command: "vscode.open",
-        arguments: [element.resource],
-        title: "Open File",
-      },
-    };
+  getTreeItem(element: Item | vscode.TreeItem): vscode.TreeItem {
+    if (element instanceof Item) {
+      return {
+        resourceUri: element.resource,
+        label: element.label,
+        // resource: element.resource,
+        tooltip: element.tooltip,
+        description: element.description,
+        collapsibleState: vscode.TreeItemCollapsibleState.None,
+        command: {
+          command: "vscode.open",
+          arguments: [element.resource],
+          title: "Open File",
+        },
+      };
+    }
+
+    return element;
   }
 
-  getChildren(element?: Item): Item[] {
-    return this.items.map((item) => Item.fromPath(item.path));
+  getChildren(element?: vscode.TreeItem) {
+    if (element) {
+      return this.getNodes(this.tree[element.label as any]);
+    }
+
+    return this.getNodes(this.tree);
+  }
+
+  getNodes(node: any) {
+    return Object.entries<Key>(node).map(([key, node]) => {
+      const collapsibleState =
+        Object.keys(node).length === 0
+          ? TreeItemCollapsibleState.None
+          : TreeItemCollapsibleState.Collapsed;
+
+      if (this.pathExists(key)) {
+        return Item.fromPath(key);
+      }
+
+      return new vscode.TreeItem(key, collapsibleState);
+    });
   }
 
   refresh() {
-    this.context.workspaceState.update("items", this.items);
+    this.context.workspaceState.update("nodes", this.tree);
     this._onDidChangeTreeData.fire();
   }
 
-  deleteItem(item: Item) {
+  deleteItem(item: Item, tree: any) {
     this.deleteItemByPath(item.resource.path);
   }
 
   deleteItemByPath(path: string) {
-    this.items = this.items.filter((_item) => _item.path !== path);
+    // this.items = this.items.filter((_item) => _item.path !== path);
     this.refresh();
+  }
+
+  private pathExists(p: string): boolean {
+    try {
+      fs.accessSync(p);
+    } catch (err) {
+      return false;
+    }
+    return true;
   }
 
   dropMimeTypes: readonly string[] = ["text/uri-list"];
@@ -82,18 +123,18 @@ export class QuickaccessProvider
     const resource = vscode.Uri.file(transferItem.value);
     const filePath = resource.path.replace("/file://", "");
 
-    const itemExists = this.items.find((item) => item.path === filePath);
-    if (itemExists) {
-      return;
-    }
+    // const itemExists = this.items.find((item) => item.path === filePath);
+    // if (itemExists) {
+    //   return;
+    // }
 
-    this.items.push({
-      path: filePath,
-    });
+    // this.items.push({
+    //   path: filePath,
+    // });
     this.refresh();
   }
 }
 
 interface Key {
-  path: string;
+  key: string;
 }
